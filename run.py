@@ -1,9 +1,20 @@
-import cx_Oracle
 from remote import RemoteIntegrate
+from local import OracleDatabase
 
 remote = RemoteIntegrate()
 
 for d in remote.get_pending():
+
     package = []
-    package.append(d)
-    print("Sending -> ", d['code'], ", Status -> ", remote.send_data(package))
+
+    db = OracleDatabase(
+        d['sqlConnection']['connectionString'],
+        d['sqlConnection']['user'],
+        d['sqlConnection']['password']
+        )
+    
+    for i in db.get_cursor(d['sqlQuery'], []):
+        print(i)
+
+    #print("Sending -> ", d['code'], ", Status -> ", remote.send_data(package))
+    print("Sending -> ", d)
