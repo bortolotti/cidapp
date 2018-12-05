@@ -15,6 +15,8 @@ for d in remote.get_pending():
 
         cursor = db.get_cursor(d['sqlQuery'], [])
         column_names = [row[0] for row in cursor.description]
+
+        print("Query -> ", d['sqlQuery'])
         
         for c in cursor:
             # Montar a requisição
@@ -25,7 +27,9 @@ for d in remote.get_pending():
             data = {k : v for k, v in zip(column_names, c)}
             request['data'].append(data)
             package.append(request)
-            print("Sending -> ", d['code'], ", Status -> ", remote.send_data(package))
+            success = remote.send_data(package)
+            if success == False:
+                print("Error Sending -> ", d['code'], ", Package -> ", package)
 
     except:
         print("Error on query ->", d['sqlQuery'])

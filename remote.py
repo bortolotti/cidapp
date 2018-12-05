@@ -57,10 +57,8 @@ class RemoteIntegrate:
                 headers={ 'Accept' : 'application/json', 
                           'Content-Type' : 'application/json' })
             resp = hc.getresponse()
-
-            print(resp.status)
-
-            r = resp.status == 201
+            
+            r = resp.status == 201 or resp.status == 404
             
         except:
             r = False
