@@ -5,8 +5,6 @@ remote = RemoteIntegrate()
 
 for d in remote.get_pending():
 
-    package = []
-
     try:
 
         db = OracleDatabase(
@@ -19,12 +17,15 @@ for d in remote.get_pending():
         column_names = [row[0] for row in cursor.description]
         
         for c in cursor:
-            data = [{k : v } for k, v in zip(column_names, c)]
-            print(data)
-            
-
-        #print("Sending -> ", d['code'], ", Status -> ", remote.send_data(package))
-        #print("Sending -> ", d)
+            # Montar a requisição
+            package = []
+            request = dict()
+            request['code'] = d['code']
+            request['data'] = list()
+            data = {k : v for k, v in zip(column_names, c)}
+            request['data'].append(data)
+            package.append(request)
+            print("Sending -> ", d['code'], ", Status -> ", remote.send_data(package))
 
     except:
         print("Error on query ->", d['sqlQuery'])

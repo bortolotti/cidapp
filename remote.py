@@ -33,8 +33,9 @@ class RemoteIntegrate:
                 except:
                     r = []
 
-        except:
+        except Exception as e:
             r = []
+            raise e
         
         finally:
             hc.close()
